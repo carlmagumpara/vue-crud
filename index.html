@@ -3,11 +3,51 @@
 <head>
   <title></title>
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <script scr="bower_components/vue/dist/vue.min.js"></script>
+  <style type="text/css">
+    .line-through {
+      text-decoration: line-through;
+    }
+  </style>
+  <script src="bower_components/vue/dist/vue.min.js"></script>
 </head>
 <body>
-  <div>
-    
+  <div id="app">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <form>
+            <div class="form-group">
+              <input type="text" v-model="todo" class="form-control" placeholder="What's need to be done?">
+              <div v-if="update">
+                <input type="submit" @click.prevent="updateTodo" class="btn btn-success btn-block" value="Update">
+                <button @click.prevent="cancelEdit" class="btn btn-default btn-block">Cancel</button>
+              </div>
+              <input type="submit" @click.prevent="createTodo" class="btn btn-success btn-block" value="Add" v-else>
+            </div>
+          </form>
+          <table class="table">
+            <tr v-for="todo in todos">
+              <td>
+                <input type="checkbox" name="checkbox" @change="changeStatus(todo, todo.status)">
+              </td>
+              <td>
+                <span v-bind:class="{ 'line-through' : getStatus(todo.status) }">{{ todo.todo }}</span>
+                <div class="pull-right">
+                  <button class="btn btn-xs btn-danger" @click="deleteTodo(todo)">delete</button>
+                  <button class="btn btn-xs btn-primary" v-if="!todo.status" @click="editTodo(todo.todo, todo)">edit</button>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <p>Live Data Changes:</p>
+          JSON: {{todos}} <br>
+          Update Button: {{update}} <br>
+          Todo Model: {{todo}}
+        </div>
+      </div>
+    </div>
   </div>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
